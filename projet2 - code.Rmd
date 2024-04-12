@@ -1,0 +1,191 @@
+---
+title: "Salm: extra - Poisson variation in dose - reponse study"
+author: BRUNO LOPES Matheus, , TRIOMPHE Amaury
+output: pdf_document
+date: "15/04/2024"
+---
+
+# Importations préliminaires
+
+```{r}
+# mettre ce qui nous sert pour la suite
+```
+
+# Récupération des données
+
+```{r}
+Ndoses <-
+6
+Nplates <-
+3
+y <-
+structure(c(15, 16, 16, 27, 33, 20, 21, 18, 26, 41, 38, 27, 29, 
+21, 33, 60, 41, 42), .Dim = c(6, 3))
+x <-
+c(0, 10, 33, 100, 333, 1000)
+```
+
+# Initialisation
+
+```{r}
+alpha_star <- 0
+beta <- 0
+gamma <- 0
+tau <- 0.1
+lambda <-
+structure(c(0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0), .Dim = c(6, 3))
+```
+
+# Implémentation de la méthode MCMC (Hastings within Gibbs)
+
+```{r}
+#Ça c'est l'algo utilisé pour l'autre projet qu'on peut utiliser comme base  
+seeds = function(nchain, N, r, n, x1, x2, alpha0, alpha1, alpha2, alpha12, tau, b, prop_sd){
+  
+  # Initialisation
+  res = matrix(NA, nchain + 1, 5)
+  res[1, ] = c(alpha0, alpha1, alpha12, alpha2, 1/sqrt(tau)) # le dernier terme vaut sigma
+
+  p = plogis(alpha0 + alpha1 * x1 + alpha2 * x2 + alpha12 * x1 * x2 + b)
+  
+  res_b = matrix(NA, nchain + 1, N)
+  res_b[1, ] = b
+  
+  acc_rates = rep(0, 4) # pour les 4 alpha
+  
+  for (i in 1:nchain){
+    
+    # Mise à jour de alpha0
+    alpha0 = res[i, 1]
+    prop = rnorm(1, alpha0, prop_sd[1]) # marche aléatoire simple
+    prop_p = plogis(prop + alpha1 * x1 + alpha2 * x2 + alpha12 * x1 * x2 + b)
+    
+    top = - ((prop^2) / (2 * 1e6)) + sum(r * log(prop_p)) + sum((n-r) * log(1 - prop_p))
+    bottom = - ((alpha0^2) / (2 * 1e6)) + sum(r * log(p)) + sum((n-r) * log(1 - p))
+    acc_prob = exp(top - bottom) # Ratio des noyaux vaut 1 (symétrie du noyau)
+    
+    if (runif(1) < min(1, acc_prob)){
+      alpha0 = prop
+      p = prop_p
+      acc_rates[1] = acc_rates[1] + 1
+    }
+    
+    # Mise à jour de alpha1
+    alpha1 = res[i, 2]
+    prop = rnorm(1, alpha1, prop_sd[2]) # marche aléatoire simple
+    prop_p = plogis(alpha0 + prop * x1 + alpha2 * x2 + alpha12 * x1 * x2 + b)
+    
+    top = - ((prop^2) / (2 * 1e6)) + sum(r * log(prop_p)) + sum((n-r) * log(1 - prop_p))
+    bottom = - ((alpha1^2) / (2 * 1e6)) + sum(r * log(p)) + sum((n-r) * log(1 - p))
+    acc_prob = exp(top - bottom) # Ratio des noyaux vaut 1 (symétrie du noyau)
+    
+    if (runif(1) < min(1, acc_prob)){
+      alpha1 = prop
+      p = prop_p
+      acc_rates[2] = acc_rates[2] + 1
+    }
+
+    # Mise à jour de alpha12
+    alpha12 = res[i, 3]
+    prop = rnorm(1, alpha12, prop_sd[3]) # marche aléatoire simple
+    prop_p = plogis(alpha0 + alpha1 * x1 + alpha2 * x2 + prop * x1 * x2 + b)
+    
+    top = - ((prop^2) / (2 * 1e6)) + sum(r * log(prop_p)) + sum((n-r) * log(1 - prop_p))
+    bottom = - ((alpha12^2) / (2 * 1e6)) + sum(r * log(p)) + sum((n-r) * log(1 - p))
+    acc_prob = exp(top - bottom) # Ratio des noyaux vaut 1 (symétrie du noyau)
+    
+    if (runif(1) < min(1, acc_prob)){
+      alpha12 = prop
+      p = prop_p
+      acc_rates[3] = acc_rates[3] + 1
+    }
+    
+    # Mise à jour de alpha2
+    alpha2 = res[i, 4]
+    prop = rnorm(1, alpha2, prop_sd[4]) # marche aléatoire simple
+    prop_p = plogis(alpha0 + alpha1 * x1 + prop * x2 + alpha12 * x1 * x2 + b)
+    
+    top = - ((prop^2) / (2 * 1e6)) + sum(r * log(prop_p)) + sum((n-r) * log(1 - prop_p))
+    bottom = - ((alpha2^2) / (2 * 1e6)) + sum(r * log(p)) + sum((n-r) * log(1 - p))
+    acc_prob = exp(top - bottom) # Ratio des noyaux vaut 1 (symétrie du noyau)
+    
+    if (runif(1) < min(1, acc_prob)){
+      alpha2 = prop
+      p = prop_p
+      acc_rates[4] = acc_rates[4] + 1
+    }
+    
+    # Mise à jour de tau
+    tau = rgamma(1, shape = 10e-3 + N / 2, scale = 1e-3 + 0.5 * sum(b^2))
+
+    # Mise à jour de b
+    for (j in 1:N){
+      prop = rnorm(1, b[j], prop_sd[5])
+      prop_p_j = plogis(alpha0 + alpha1 * x1[j] + alpha2 * x2[j] + alpha12 * x1[j] * x2[j] + prop)
+      
+      top = - (prop^2 * tau / 2) + r[j] * log(prop_p_j) + (n[j] - r[j]) * log(1 - prop_p_j)
+      bottom = - (b[j]^2 * tau / 2) + r[j] * log(p[j]) + (n[j] - r[j]) * log(1 - p[j])
+      acc_prob = exp(top - bottom)
+      
+      if (runif(1) < min(1, acc_prob)){
+        b[j] = prop
+        p[j] = prop_p_j
+      }
+    }
+    
+    # Mise à jour de la chaine de Markov et de b
+    res[i+1, ] = c(alpha0, alpha1, alpha12, alpha2, 1/sqrt(tau))
+    res_b[i+1, ] = b
+  }
+  
+  my_list <- list("chain" = res, "b_chain" = res_b, "acc_rates" = acc_rates)
+  return(my_list)
+}
+```
+
+# Récupération des résultats
+
+```{r}
+#Pareil qu'avant
+resultat = seeds(1e4, N, r, n, x1, x2, alpha0, alpha1, alpha2, alpha12, tau, b, prop_sd = c(0.3, 0.3, 0.3, 0.3, 0.3)) # prop_sd choisi pour avoir une allure de chaîne cohérente
+
+resultat_chain = resultat$chain[1001:nrow(resultat$chain), ] # on enlève les 1000 premiers (burnin)
+
+moychain = colMeans(resultat_chain) # moyenne
+sdchain = apply(resultat_chain, 2, sd) # écart type
+
+cat("alpha_0 est estimé à", moychain[1], "avec un écart-type de", sdchain[1], "\n")
+cat("alpha_1 est estimé à", moychain[2], "avec un écart-type de", sdchain[2], "\n")
+cat("alpha_12 est estimé à", moychain[3], "avec un écart-type de", sdchain[3], "\n")
+cat("alpha_2 est estimé à", moychain[4], "avec un écart-type de", sdchain[4], "\n")
+cat("sigma est estimé à", moychain[5], "avec un écart-type de", sdchain[5], "\n")
+```
+
+# Allure des chaines et densités
+
+```{r}
+library(coda)
+par(ask = FALSE, mfrow = c(3, 1), mar = c(1, 1, 3, 3)) # Configure la disposition des graphiques 
+
+# Tracer les 3 premiers graphiques des chaînes de Markov
+plot(mcmc(resultat_chain[,1:3]))
+
+mtext(expression("Graphiques pour " * alpha[0]), side = 3, line = 23)
+mtext(expression("Graphiques pour " * alpha[1]), side = 3, line = 11.5)
+mtext(expression("Graphiques pour " * alpha[12]), side = 3, line = 0.5)
+
+par(mfrow = c(2, 1)) # Configure la disposition des graphiques 
+
+# Tracer les 2 derniers graphiques des chaînes de Markov
+plot(mcmc(resultat_chain)[,4:5])
+
+mtext(expression("Graphiques pour " * alpha[2]), side = 3, line = 12)
+mtext(expression("Graphiques pour " * sigma), side = 3, line = 1)
+
+
+```

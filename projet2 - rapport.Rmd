@@ -1,0 +1,95 @@
+---
+title: "Salm: extra - Poisson variation in dose - reponse study"
+author: BRUNO LOPES Matheus, , TRIOMPHE Amaury
+output: pdf_document
+date: "15/04/2024"
+keep_tex: true    
+---
+
+**Lien vers notre Github** : <https://github.com/mblmatheus/projet_bayes_2.git>
+
+# Données étudiées ()
+
+
+```{=tex}
+\begin{table}[h]
+\centering
+\small
+\begin{minipage}{0.45\textwidth}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Bean}} & \multicolumn{3}{|c|}{\textbf{Cucumber}} \\
+\hline
+\textbf{r} & \textbf{n} & \textbf{r/n} & \textbf{r} & \textbf{n} & \textbf{r/n} \\
+\hline
+10 & 39 & 0.26 & 5 & 6 & 0.83 \\
+23 & 62 & 0.37 & 53 & 74 & 0.72 \\
+23 & 81 & 0.28 & 55 & 72 & 0.76 \\
+26 & 51 & 0.51 & 32 & 51 & 0.63 \\
+17 & 39 & 0.44 & 46 & 79 & 0.58 \\
+ & & & 10 & 13 & 0.77 \\
+\hline
+\end{tabular}
+\caption{Données récupérées pour la graine seed O. aegyptiaco 75}
+\label{tab:tableau1}
+\end{minipage}\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Bean}} & \multicolumn{3}{|c|}{\textbf{Cucumber}} \\
+\hline
+\textbf{r} & \textbf{n} & \textbf{r/n} & \textbf{r} & \textbf{n} & \textbf{r/n} \\
+\hline
+8 & 16 & 0.5 & 3 & 12 & 0.25 \\
+10 & 30 & 0.33 & 22 & 41 & 0.54 \\
+8 & 28 & 0.29 & 15 & 30 & 0.5 \\
+23 & 45 & 0.51 & 32 & 51 & 0.63 \\
+0 & 4 & 0 & 3 & 7 & 0.43 \\
+\hline
+\end{tabular}
+\caption{Données récupérées pour la graine seed O. aegyptiaco 73}
+\label{tab:tableau2}
+\end{minipage}
+\end{table}
+```
+# Cadre mathématique
+
+## Hypothèses sur nos données () 
+
+## Graphe acyclique orienté () 
+
+## Lois conditionnelles ()
+
+# Résultats de l'implémentation algorithmique ()
+
+
+```{=tex}
+\begin{table}[h]
+\centering
+\small
+\begin{minipage}{0.45\textwidth}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{} &
+\multicolumn{2}{|c|}{\textbf{Moyenne}} & \multicolumn{2}{|c|}{\textbf{Écart-type}} \\
+\hline
+\textbf{Paramètres} & \textbf{Résultat} & \textbf{Énoncé} & \textbf{Résultat} & \textbf{Énoncé} \\
+\hline
+$\alpha_0$ & -0.5562 & -0.5525 & 0.1865 & 0.1852 \\
+$\alpha_1$ & 0.0706 & 0.08382 & 0.3252 & 0.3031 \\
+$\alpha_{12}$ & -0.8021 & -0.8165 & 0.4564 & 0.4109 \\
+$\alpha_2$ & 1.3511 & 1.346 & 0.2745 & 0.2564 \\
+$\sigma$ & 0.3198 & 0.267 & 0.0661 & 0.1471 \\
+\hline
+\end{tabular}
+\caption{Résultats de notre algorithme Hastings within Gibbs}
+\end{minipage}
+\end{table}
+```
+-   Allure des chaines de Markov (Matheus)
+-   Allure des densités des chaines (Najib)
+
+# Analyse des résultats ()
