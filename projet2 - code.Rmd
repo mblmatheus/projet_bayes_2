@@ -71,11 +71,11 @@ results_post_burn_in <- results[(burn_in + 1):nrow(results), ]
 moychain <- colMeans(results_post_burn_in) # moyenne
 sdchain <- apply(results_post_burn_in, 2, sd) # écart type
 
-cat("alpha_0 est estimé à", moychain[1], "avec un écart-type de", sdchain[1], "\n")
-cat("alpha_1 est estimé à", moychain[2], "avec un écart-type de", sdchain[2], "\n")
-cat("alpha_12 est estimé à", moychain[3], "avec un écart-type de", sdchain[3], "\n")
-cat("alpha_2 est estimé à", moychain[4], "avec un écart-type de", sdchain[4], "\n")
-cat("sigma est estimé à", moychain[5], "avec un écart-type de", sdchain[5], "\n")
+cat("Alpha est estimé à", moychain[1], "avec un écart-type de", sdchain[1], "\n")
+cat("Beta est estimé à", moychain[2], "avec un écart-type de", sdchain[2], "\n")
+cat("Gamma est estimé à", moychain[3], "avec un écart-type de", sdchain[3], "\n")
+cat("Sigma est estimé à", moychain[4], "avec un écart-type de", sdchain[4], "\n")
+
 ```
 # Visualisation des résultats
 
