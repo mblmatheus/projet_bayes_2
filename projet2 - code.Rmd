@@ -1,6 +1,6 @@
 ---
 title: "Salm: extra - Poisson variation in dose - reponse study"
-author: BRUNO LOPES Matheus, , TRIOMPHE Amaury
+author: BRUNO LOPES Matheus,CHERQI Meryem , TRIOMPHE Amaury
 output: pdf_document
 date: "15/04/2024"
 ---
