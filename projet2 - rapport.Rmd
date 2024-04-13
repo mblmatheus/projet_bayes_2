@@ -10,7 +10,6 @@ keep_tex: true
 
 # Données étudiées ()
 
-
 ```{=tex}
 \begin{table}[h]
 \centering
@@ -56,14 +55,46 @@ keep_tex: true
 ```
 # Cadre mathématique
 
-## Hypothèses sur nos données () 
+## Hypothèses sur nos données ()
 
-## Graphe acyclique orienté () 
+## Graphe acyclique orienté ()
 
 ## Lois conditionnelles ()
 
-# Résultats de l'implémentation algorithmique ()
+Comme nous allons appliquer Hastings-within-Gibbs, nous devrons avoir les lois conditionnelles de tous les paramètres de l'expression de $log(\mu_{ij})$, c'est-à-dire que nous devrons obtenir toutes les lois postérieures. Pour $\alpha$, nous aurons :
 
+$$
+  \pi(\alpha|\beta, \gamma, \lambda, y,\tau) \propto \pi(\beta, \gamma, \lambda, y,\tau|\alpha)\pi(\alpha)
+$$
+
+Dans le contexte de H-W-Gibbs, comme nous allons mettre à jour les paramètres séparément en considérant les autres comme des valeurs fixes, nous aurons :
+
+$$
+    \pi(\alpha|\beta, \gamma, \lambda, y,\tau) \propto \pi(y|\beta, \gamma, \lambda,\tau)\pi(\alpha)\\ =  \pi(\alpha)\prod_{i=1}^{n_{doses}}\prod_{j=1}^{n_{plates}}\pi(y_{ij}|\beta, \gamma, \lambda_{ij},\tau)\\ = \pi(\alpha)\prod_{i=1}^{n_{doses}}\prod_{j=1}^{n_{plates}}\frac{\lambda_{ij}^{y_{ij}}}{y_{ij}!}e^{-\lambda_{ij}}
+$$
+
+Comme tous suivent la même loi a priori, nous aurons des expressions similaires pour $\beta$ et $\gamma$. Pour $\tau$, nous devrons, comme $\tau$ dépend de $\lambda$ qui suit une loi normale, qui dans ce cas est conjuguée par la loi gamma (loi a priori de $\tau$), obtenir directement la loi a posteriori de $\tau$ :
+
+$$
+  \tau|\alpha_0, \alpha_{1}, \alpha_{12},\alpha_2, i , b, r \sim gamma(10^{-3} + \frac{n_{doses} + n_{plates}}{2}, 10^{-3} + \frac{\sum_{i=1}^{n_{doses}}\sum_j^{n_{plates}}\lambda_{ij}^2}{2})
+$$
+
+Une fois $\tau$ mis à jour dans l'algorithme, nous pourrons mettre à jour chaque $\lambda_{ij}$, pour $i \in \{1, ..., n_{doses}\}$ et $j \in \{1, …, n_{plates}\}$, où chacun aura la loi a posteriori suivante :
+
+$$
+  \pi(\lambda_{ij}| \alpha, \beta,\gamma,  y_{ij}, \tau) \propto \pi(\alpha, \beta, \gamma,  y_{ij}, \tau| \lambda_{ij})\pi(\lambda_{ij})
+$$
+
+En considérant que $\alpha, \beta, \gamma,\tau$ sont des paramètres déjà fixes et que $\lambda_{ij} \sim N(0,\tau)$, nous pouvons écrire :
+
+$$
+  \pi(\lambda_{ij}| \alpha, \beta, \gamma, y_{ij}, \tau) \propto \pi(y_{ij}| \lambda_{ij}, \alpha, \beta, \gamma, \tau)\pi(\lambda_{ij}) \\
+  =\frac{\lambda_{ij}^{y_{ij}}}{y_{ij}!}\exp{(-\frac{\lambda_{ij}^2}{2\tau})}
+$$
+
+Maintenant, ayant toutes les lois conditionnelles, nous pouvons appliquer notre algorithme Hastings-within-Gibbs.
+
+# Résultats de l'implémentation algorithmique ()
 
 ```{=tex}
 \begin{table}[h]
