@@ -57,6 +57,34 @@ keep_tex: true
 
 ## Hypothèses sur nos données ()
 
+## Hypothèses sur nos données ()
+
+Si $\mu_{ij}$ est la moyenne des réversion observées avec une dose de quinoline $i$ sur la plaque $j$, alors il est supposé que le comptage des réversions $y_{ij}$ sur la plaque $j$ avec chaque niveau de dose de quinoline $i$ suit une distribution de Poisson :
+
+$$
+y_{ij} \sim Poisson(\mu_{ij})
+$$
+
+De plus, la modélisation de la moyenne est effectuée par une fonction logarithmique de la dose $x_i$ avec un ajustement pour traiter la surdispersion, qui est représenté par le terme $\gamma x_i$. En d'autres termes :
+
+$$
+  \log{(\mu_{ij})} = \alpha + \beta\log(x_i + 10) + \gamma x_i + \lambda_{ij} \\
+  \text{où } \lambda_{ij} \sim \mathcal{N}(0,\tau)
+$$
+
+$\alpha, \beta, \gamma, \tau$ ont des priors indépendants "non informatifs" fournis, qui seront supposés comme suit :
+
+$$
+  \alpha, \beta, \gamma \sim \mathcal{N}(0, 10^{-6}), \: et \\
+  \tau \sim \text{gamma}(10^{-3}, 10^{-3})
+$$
+
+Une dernière hypothèse que nous ferons également est que $y_{ij}$ sont indépendants.
+
+$$
+y_{ij} \sim Poisson(\mu_{ij})
+$$
+
 ## Graphe acyclique orienté ()
 
 ## Lois conditionnelles ()
