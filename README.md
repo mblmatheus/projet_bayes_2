@@ -8,6 +8,7 @@ Ce sujet examine comment différentes quantités d'une substance affectent un r�
 
 Implémenté et Rédigé par:
 - Cherqi Meryem
+- ARIFALLAH Lamiae
 
 
 Supervisé par :
