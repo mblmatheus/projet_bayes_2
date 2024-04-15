@@ -98,7 +98,7 @@ $$
 Dans le contexte de H-W-Gibbs, comme nous allons mettre à jour les paramètres séparément en considérant les autres comme des valeurs fixes, nous aurons :
 
 $$
-    \pi(\alpha|\beta, \gamma, \lambda, y,\tau) \propto \pi(y|\beta, \gamma, \lambda,\tau)\pi(\alpha)\\ =  \pi(\alpha)\prod_{i=1}^{n_{doses}}\prod_{j=1}^{n_{plates}}\pi(y_{ij}|\beta, \gamma, \lambda_{ij},\tau)\\ = \pi(\alpha)\prod_{i=1}^{n_{doses}}\prod_{j=1}^{n_{plates}}\frac{\lambda_{ij}^{y_{ij}}}{y_{ij}!}e^{-\lambda_{ij}}
+    \pi(\alpha|\beta, \gamma, \lambda, y,\tau) \propto \pi(y|\beta, \gamma, \lambda,\tau)\pi(\alpha)\\ =  \pi(\alpha)\prod_{i=1}^{n_{doses}}\prod_{j=1}^{n_{plates}}\pi(y_{ij}|\beta, \gamma, \lambda_{ij},\tau)\\ = \pi(\alpha)\prod_{i=1}^{n_{doses}}\prod_{j=1}^{n_{plates}}\frac{\mu_{ij}^{y_{ij}}}{y_{ij}!}e^{-\mu_{ij}}
 $$
 
 Comme tous suivent la même loi a priori, nous aurons des expressions similaires pour $\beta$ et $\gamma$. Pour $\tau$, nous devrons, comme $\tau$ dépend de $\lambda$ qui suit une loi normale, qui dans ce cas est conjuguée par la loi gamma (loi a priori de $\tau$), obtenir directement la loi a posteriori de $\tau$ :
@@ -117,7 +117,7 @@ En considérant que $\alpha, \beta, \gamma,\tau$ sont des paramètres déjà fix
 
 $$
   \pi(\lambda_{ij}| \alpha, \beta, \gamma, y_{ij}, \tau) \propto \pi(y_{ij}| \lambda_{ij}, \alpha, \beta, \gamma, \tau)\pi(\lambda_{ij}) \\
-  =\frac{\lambda_{ij}^{y_{ij}}}{y_{ij}!}\exp{(-\frac{\lambda_{ij}^2}{2\tau})}
+  =\frac{\mu_{ij}^{y_{ij}}}{y_{ij}!}\exp{(-\frac{\lambda_{ij}^2}{2\tau}-\mu_{ij})}
 $$
 
 Maintenant, ayant toutes les lois conditionnelles, nous pouvons appliquer notre algorithme Hastings-within-Gibbs.
