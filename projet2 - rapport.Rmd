@@ -8,7 +8,7 @@ keep_tex: true
 
 **Lien vers notre Github** : <https://github.com/mblmatheus/projet_bayes_2.git>
 
-# Données étudiées ()
+# Données étudiées :
 
 ```{=tex}
 \begin{table}[h]
@@ -16,41 +16,17 @@ keep_tex: true
 \small
 \begin{minipage}{0.45\textwidth}
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|}
 \hline
-\multicolumn{3}{|c|}{\textbf{Bean}} & \multicolumn{3}{|c|}{\textbf{Cucumber}} \\
-\hline
-\textbf{r} & \textbf{n} & \textbf{r/n} & \textbf{r} & \textbf{n} & \textbf{r/n} \\
-\hline
-10 & 39 & 0.26 & 5 & 6 & 0.83 \\
-23 & 62 & 0.37 & 53 & 74 & 0.72 \\
-23 & 81 & 0.28 & 55 & 72 & 0.76 \\
-26 & 51 & 0.51 & 32 & 51 & 0.63 \\
-17 & 39 & 0.44 & 46 & 79 & 0.58 \\
- & & & 10 & 13 & 0.77 \\
+0    & 10   & 33   & 100  & 333  & 1000 \\\hline
+15   & 16   & 16   & 27   & 33   & 20   \\
+21   & 18   & 26   & 41   & 38   & 27   \\
+29   & 21   & 33   & 69   & 41   & 42   \\
 \hline
 \end{tabular}
-\caption{Données récupérées pour la graine seed O. aegyptiaco 75}
+\caption{Dose de quinoléine (mg par plaque)}
 \label{tab:tableau1}
 \end{minipage}\hfill
-\begin{minipage}{0.45\textwidth}
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-\multicolumn{3}{|c|}{\textbf{Bean}} & \multicolumn{3}{|c|}{\textbf{Cucumber}} \\
-\hline
-\textbf{r} & \textbf{n} & \textbf{r/n} & \textbf{r} & \textbf{n} & \textbf{r/n} \\
-\hline
-8 & 16 & 0.5 & 3 & 12 & 0.25 \\
-10 & 30 & 0.33 & 22 & 41 & 0.54 \\
-8 & 28 & 0.29 & 15 & 30 & 0.5 \\
-23 & 45 & 0.51 & 32 & 51 & 0.63 \\
-0 & 4 & 0 & 3 & 7 & 0.43 \\
-\hline
-\end{tabular}
-\caption{Données récupérées pour la graine seed O. aegyptiaco 73}
-\label{tab:tableau2}
-\end{minipage}
 \end{table}
 ```
 # Cadre mathématique
