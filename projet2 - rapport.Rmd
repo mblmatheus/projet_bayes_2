@@ -29,9 +29,39 @@ keep_tex: true
 \end{minipage}\hfill
 \end{table}
 ```
+
+# Visualisation graphique :
+
+```{r, echo=FALSE}
+# Charger la bibliothèque ggplot2
+library(ggplot2)
+
+# Données
+y <- matrix(c(15, 21, 29,
+              16, 18, 21,
+              16, 26, 33,
+              27, 41, 60,
+              33, 38, 41,
+              20, 27, 42), ncol = 3, byrow = TRUE)
+
+x <- c(0, 10, 33, 100, 333, 1000)
+
+# Transformer les données en un dataframe
+data <- data.frame(x = rep(x, times = ncol(y)), y = c(y), Plate = factor(rep(1:ncol(y), each = nrow(y))))
+
+# Tracer
+ggplot(data, aes(x = x, y = y)) +
+  geom_point(aes(color = Plate)) +
+  geom_line(aes(group = Plate, color = Plate)) +
+  labs(x = "Dose de quinoline (microgramme par plaque)", y = "Nombre de colonies réversibles", color = "Plaque") +
+  ggtitle("Courbe dose-réponse de la Salmonella TA98 à la quinoline") +
+  theme_minimal()
+
+```
+
+
 # Cadre mathématique
 
-## Hypothèses sur nos données ()
 
 ## Hypothèses sur nos données ()
 
