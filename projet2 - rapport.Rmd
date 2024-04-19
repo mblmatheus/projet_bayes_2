@@ -32,7 +32,7 @@ keep_tex: true
 
 # Visualisation graphique :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,  fig.width=7, fig.height=4}
 # Charger la bibliothèque ggplot2
 library(ggplot2)
 
@@ -92,6 +92,16 @@ y_{ij} \sim Poisson(\mu_{ij})
 $$
 
 ## Graphe acyclique orienté 
+
+## Analyse modèle
+
+Le modèle choisi est un modèle Poisson. Dans ce modèle, la variable de réponse (nombre de colonies réversibles) suit une distribution de Poisson, et les effets aléatoires ($\lambda_{ij}$) sont modélisés comme provenant d'une distribution normale avec une moyenne de zéro et une variance de $\tau$. Le modèle permet également une surdispersion, ce qui est souvent observé dans les données biologiques.
+
+Le modèle propose une courbe dose-réponse, suggérant que le nombre de colonies réversibles augmente ou diminue en fonction de la dose de quinoline (ce qui ne paraît pas évident au vue du graphe). Cela est exprimé par la relation log-linéaire entre la dose de quinoline et le nombre de colonies réversibles.
+
+Le modèle comporte plusieurs paramètres : $\alpha, \beta, \gamma$ et $\tau$. $\alpha, \beta, \gamma$ sont les paramètres de la relation dose-réponse, tandis que $\tau$ capture la variation entre les différentes plaques de chaque dose.
+
+Les paramètres sont supposés avoir des priors non informatifs, ce qui signifie que les priors ne contiennent pas d'informations subjectives sur les paramètres. Cela permet aux données d'informer principalement les estimations des paramètres sans biais subjectifs.
 
 ## Lois conditionnelles 
 
