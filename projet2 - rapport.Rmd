@@ -63,7 +63,7 @@ ggplot(data, aes(x = x, y = y)) +
 # Cadre mathématique
 
 
-## Hypothèses sur nos données ()
+## Hypothèses sur nos données
 
 Si $\mu_{ij}$ est la moyenne des réversion observées avec une dose de quinoline $i$ sur la plaque $j$, alors il est supposé que le comptage des réversions $y_{ij}$ sur la plaque $j$ avec chaque niveau de dose de quinoline $i$ suit une distribution de Poisson :
 
@@ -91,9 +91,9 @@ $$
 y_{ij} \sim Poisson(\mu_{ij})
 $$
 
-## Graphe acyclique orienté ()
+## Graphe acyclique orienté 
 
-## Lois conditionnelles ()
+## Lois conditionnelles 
 
 Comme nous allons appliquer Hastings-within-Gibbs, nous devrons avoir les lois conditionnelles de tous les paramètres de l'expression de $log(\mu_{ij})$, c'est-à-dire que nous devrons obtenir toutes les lois postérieures. Pour $\alpha$, nous aurons :
 
@@ -128,7 +128,7 @@ $$
 
 Maintenant, ayant toutes les lois conditionnelles, nous pouvons appliquer notre algorithme Hastings-within-Gibbs.
 
-# Résultats de l'implémentation algorithmique ()
+# Résultats de l'implémentation algorithmique
 
 ```{=tex}
 \begin{table}[h]
@@ -143,18 +143,49 @@ Maintenant, ayant toutes les lois conditionnelles, nous pouvons appliquer notre 
 \hline
 \textbf{Paramètres} & \textbf{Résultat} & \textbf{Énoncé} & \textbf{Résultat} & \textbf{Énoncé} \\
 \hline
-$\alpha_0$ & -0.5562 & -0.5525 & 0.1865 & 0.1852 \\
-$\alpha_1$ & 0.0706 & 0.08382 & 0.3252 & 0.3031 \\
-$\alpha_{12}$ & -0.8021 & -0.8165 & 0.4564 & 0.4109 \\
-$\alpha_2$ & 1.3511 & 1.346 & 0.2745 & 0.2564 \\
-$\sigma$ & 0.3198 & 0.267 & 0.0661 & 0.1471 \\
+$\alpha$ & 2.16935 & 2.193 & 0.1865 & 0.65551 \\
+$\beta$ & 0.2544539 & 0.3059 & 0.3252 & 0.1054 \\
+$\gamma$ & -1.978E-4 & -9.577E-4 & 7.2481E-4 & 4.525E-4 \\
+$\sigma$ & 0.4620 & 0.2608 & 0.1560 & 0.08077 \\
 \hline
 \end{tabular}
 \caption{Résultats de notre algorithme Hastings within Gibbs}
 \end{minipage}
 \end{table}
 ```
--   Allure des chaines de Markov (Matheus)
--   Allure des densités des chaines (Najib)
+-   Allure des chaines de Markov
 
-# Analyse des résultats ()
+![Chaînes de Markov](graphe_chaine_de_markov.png){ width=50% }
+
+
+-   Allure des densités des chaines
+
+
+# Analyse des résultats
+
+On va maintenant essayer de voir l'impact de la dose de quinoléine sur le nombre de colonies réversibles de Salmonella TA98. Pour cela, on réutilise les moyennes des variables aléatoires que l'on a calculé avant. 
+
+```{r, echo=FALSE}
+library(knitr)
+
+dose_de_quinoléine = c(0, 10, 33, 100, 333, 1000)
+alpha_mean = 2.16935
+beta_mean = 0.2544539
+gamma_mean = -1.978e-4
+lambda_mean = 0.00004596
+
+mu <- alpha_mean + beta_mean * log(dose_de_quinoléine+10) + gamma_mean * dose_de_quinoléine + lambda_mean
+
+# Fusionner les tableaux x et y
+data <- data.frame(dose = dose_de_quinoléine, mu = mu)
+
+# Afficher le tableau
+kable(data, caption = "Tableau de mu en fonction de la dose de quinoléine", format = "latex")
+
+# Tracer le graphique
+ggplot(data, aes(x = dose_de_quinoléine, y = mu)) +
+  geom_point() +
+  labs(x = "dose_de_quinoléine", y = "mu") +
+  ggtitle("Tracé de log(u) en fonction de la dose de quinoléine")
+```
+
