@@ -1,9 +1,12 @@
 ---
 title: "Salm: extra - Poisson variation in dose - reponse study"
-author: BRUNO LOPES Matheus, , TRIOMPHE Amaury
-output: pdf_document
+author: "ARIFALLAH Lamiae, BRUNO LOPES Matheus, CHERQI Meryem, TRIOMPHE Amaury"
 date: "15/04/2024"
-keep_tex: true    
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+keep_tex: yes
 ---
 
 **Lien vers notre Github** : <https://github.com/mblmatheus/projet_bayes_2.git>
@@ -29,7 +32,6 @@ keep_tex: true
 \end{minipage}\hfill
 \end{table}
 ```
-
 # Visualisation graphique :
 
 ```{r, echo=FALSE,  fig.width=7, fig.height=4}
@@ -59,9 +61,7 @@ ggplot(data, aes(x = x, y = y)) +
 
 ```
 
-
 # Cadre mathématique
-
 
 ## Hypothèses sur nos données
 
@@ -91,7 +91,9 @@ $$
 y_{ij} \sim Poisson(\mu_{ij})
 $$
 
-## Graphe acyclique orienté 
+## Graphe 
+
+![](graphe.png){width="50%"}
 
 ## Analyse modèle
 
@@ -103,7 +105,7 @@ Le modèle comporte plusieurs paramètres : $\alpha, \beta, \gamma$ et $\tau$. $
 
 Les paramètres sont supposés avoir des priors non informatifs, ce qui signifie que les priors ne contiennent pas d'informations subjectives sur les paramètres. Cela permet aux données d'informer principalement les estimations des paramètres sans biais subjectifs.
 
-## Lois conditionnelles 
+## Lois conditionnelles
 
 Comme nous allons appliquer Hastings-within-Gibbs, nous devrons avoir les lois conditionnelles de tous les paramètres de l'expression de $log(\mu_{ij})$, c'est-à-dire que nous devrons obtenir toutes les lois postérieures. Pour $\alpha$, nous aurons :
 
@@ -163,20 +165,20 @@ $\sigma$ & 0.4620 & 0.2608 & 0.1560 & 0.08077 \\
 \end{minipage}
 \end{table}
 ```
--   Allure des chaines de Markov
-
-![Chaînes de Markov](graphe_chaine_de_markov.png){ width=50% }
 
 
--   Allure des densités des chaines
+-   Allure des chaines de Markov et densités
 
+![](graphe_chaine_de_markov.png){width="70%"}
 
 # Analyse des résultats
 
-On va maintenant essayer de voir l'impact de la dose de quinoléine sur le nombre de colonies réversibles de Salmonella TA98. Pour cela, on réutilise les moyennes des variables aléatoires que l'on a calculé avant. 
+Premièrement, nous constatons qu'il y a une cohérence entre nos résultats et ceux obtenus dans l'énoncé, ce qui montre que notre modèle développé fonctionne comme prévu. Une autre analyse que nous pouvons effectuer consiste à vérifier si nos résultats sont cohérents avec le problème présenté, pour cela nous pouvons essayer de voir l'impact de la dose de quinoléine sur le nombre de colonies réversibles de Salmonella TA98. Pour ce faire, nous réutilisons les moyennes des variables aléatoires que nous avons calculées auparavant.
+
 
 ```{r, echo=FALSE}
 library(knitr)
+library(ggplot2)
 
 dose_de_quinoléine = c(0, 10, 33, 100, 333, 1000)
 alpha_mean = 2.16935
@@ -184,7 +186,7 @@ beta_mean = 0.2544539
 gamma_mean = -1.978e-4
 lambda_mean = 0.00004596
 
-mu <- alpha_mean + beta_mean * log(dose_de_quinoléine+10) + gamma_mean * dose_de_quinoléine + lambda_mean
+mu <- exp(alpha_mean + beta_mean * log(dose_de_quinoléine+10) + gamma_mean * dose_de_quinoléine + lambda_mean)
 
 # Fusionner les tableaux x et y
 data <- data.frame(dose = dose_de_quinoléine, mu = mu)
@@ -196,6 +198,7 @@ kable(data, caption = "Tableau de mu en fonction de la dose de quinoléine", for
 ggplot(data, aes(x = dose_de_quinoléine, y = mu)) +
   geom_point() +
   labs(x = "dose_de_quinoléine", y = "mu") +
-  ggtitle("Tracé de log(u) en fonction de la dose de quinoléine")
+  ggtitle("Tracé de u en fonction de la dose de quinoléine")
 ```
 
+Nous pouvons observer à travers ce graphique que le nombre de réversions attendues augmente avec la concentration de quinoléine, mais semble atteindre une valeur de saturation, ce qui est le comportement attendu pour des expériences de ce type. Ainsi, nous concluons également que les résultats sont cohérents avec le contexte du problème.
