@@ -13,6 +13,8 @@ keep_tex: yes
 
 # Données étudiées :
 
+Breslow (1984) analysa des données d'essais de mutagénicité (présentées ci-dessous) sur la salmonelle dans lesquelles trois plaques ont été traitées à chaque dose $i$ de quinoline et le nombre de colonies réversibles de Salmonella TA98 fut mesuré. Une certaine courbe dose-réponse fut suggérée par la théorie.
+
 ```{=tex}
 \begin{table}[h]
 \centering
